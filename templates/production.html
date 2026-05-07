@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production - Update Job</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-header">🏭 Production - Update Job</h1>
+        <nav class="main-nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/designer">Create Job</a>
+            <a href="/production" class="active">Production</a>
+            <a href="/delivery">Delivery</a>
+            <a href="/logout">Logout</a>
+        </nav>
+        <div class="card-form">
+            <form method="post" action="/production" class="styled-form">
+                <div class="form-group">
+                    <label>Job No</label>
+                    <select name="job_no" required>
+                        <option value="">-- Select Job --</option>
+                        {% for job in jobs if job.status != 'Completed' %}
+                            <option value="{{ job.job_no }}">{{ job.job_no }} - {{ job.customer }} - {{ job.design }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label>Rip Format</label>
+                    <input type="text" name="rip_format" placeholder="Rip Format" required>
+                </div>
+                <div class="form-group">
+                    <label>Size</label>
+                    <input type="text" name="size" placeholder="Size" required>
+                </div>
+                <div class="form-group">
+                    <label>Qty</label>
+                    <input type="number" name="qty" placeholder="Quantity" required>
+                </div>
+                <div class="form-group">
+                    <label>No. of Meter</label>
+                    <input type="text" name="no_of_meter" placeholder="No. of Meter" required>
+                </div>
+                <div class="form-group">
+                    <label>Size of Roll</label>
+                    <input type="text" name="size_of_roll" placeholder="Size of Roll" required>
+                </div>
+                <div class="form-group">
+                    <label>INK</label>
+                    <input type="text" name="ink" placeholder="INK" required>
+                </div>
+                <div class="form-group">
+                    <label>Start Time</label>
+                    <input type="time" name="start_time" required>
+                </div>
+                <div class="form-group">
+                    <label>End Time</label>
+                    <input type="time" name="end_time" required>
+                </div>
+                <div class="form-group">
+                    <label>New State</label>
+                    <select name="new_state" required>
+                        <option value="">-- Select State --</option>
+                        <option value="Pre-Press">Pre-Press</option>
+                        <option value="Fusing">Fusing</option>
+                        <option value="Printing">Printing</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Remarks</label>
+                    <input type="text" name="remarks" placeholder="Remarks (optional)">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Change State</button>
+                    <a href="/dashboard" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+            {% if message %}
+                <div class="success-message">✅ {{ message }}</div>
+            {% endif %}
+            {% if error %}
+                <div class="error-message">❌ {{ error }}</div>
+            {% endif %}
+        </div>
+        <h2 class="sub-header">Production Jobs</h2>
+        <div class="table-container">
+            <table class="styled-table" id="production-table">
+                <thead>
+                    <tr>
+                        <th>Job No</th>
+                        <th>Customer</th>
+                        <th>Design</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr class="job-row {% if job.status == 'Completed' %}completed-job{% endif %}"
+                        data-job-id="{{ job.id }}"
+                        data-job-no="{{ job.job_no }}"
+                        data-customer="{{ job.customer }}"
+                        data-design="{{ job.design }}"
+                        data-status="{{ job.status }}"
+                        ondblclick="openEditModal(this)"
+                        {% if job.status == 'Completed' %} style="pointer-events:none;"{% endif %}>
+                        <td>{{ job.job_no }}</td>
+                        <td>{{ job.customer }}</td>
+                        <td>{{ job.design }}</td>
+                        <td>{{ job.date.strftime('%Y-%m-%d') if job.date else '' }}</td>
+                        <td>{{ job.status }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5">No jobs found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+       <!-- ================= EDIT JOB MODAL ================= -->
+<div
+    id="editModal"
+    class="modal"
+    style="display:none;"
+>
+
+    <div class="modal-content modal-xl">
+
+        <!-- CLOSE BUTTON -->
+        <span
+            class="close"
+            onclick="closeEditModal()"
+        >
+            &times;
+        </span>
+
+        <!-- HEADER -->
+        <div class="modal-header">
+
+            <div>
+
+                <h2 class="modal-title">
+                    ✏️ Update Production Job
+                </h2>
+
+                <p class="modal-subtitle">
+                    Update production details, timing, and workflow state
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- ================= FORM ================= -->
+        <form
+            id="modalEditForm"
+            method="post"
+            action="/production"
+            class="styled-form modal-grid-form"
+        >
+
+            <!-- HIDDEN JOB NUMBER -->
+            <input
+                type="hidden"
+                name="job_no"
+                id="modalJobNo"
+            >
+
+            <!-- DATE -->
+            <div class="form-group">
+
+                <label for="modalDate">
+                    📅 Date
+                </label>
+
+                <input
+                    type="date"
+                    name="date"
+                    id="modalDate"
+                    required
+                >
+
+            </div>
+
+            <!-- RIP FORMAT -->
+            <div class="form-group">
+
+                <label for="modalRipFormat">
+                    🖨️ Rip Format
+                </label>
+
+                <input
+                    type="text"
+                    name="rip_format"
+                    id="modalRipFormat"
+                    placeholder="Enter rip format"
+                    required
+                >
+
+            </div>
+
+            <!-- SIZE -->
+            <div class="form-group">
+
+                <label for="modalSize">
+                    📏 Size
+                </label>
+
+                <input
+                    type="text"
+                    name="size"
+                    id="modalSize"
+                    placeholder="Enter size"
+                    required
+                >
+
+            </div>
+
+            <!-- QUANTITY -->
+            <div class="form-group">
+
+                <label for="modalQty">
+                    📦 Quantity
+                </label>
+
+                <input
+                    type="number"
+                    name="qty"
+                    id="modalQty"
+                    placeholder="Enter quantity"
+                    required
+                >
+
+            </div>
+
+            <!-- NO OF METER -->
+            <div class="form-group">
+
+                <label for="modalNoOfMeter">
+                    📐 No. of Meter
+                </label>
+
+                <input
+                    type="text"
+                    name="no_of_meter"
+                    id="modalNoOfMeter"
+                    placeholder="Enter meter details"
+                    required
+                >
+
+            </div>
+
+            <!-- SIZE OF ROLL -->
+            <div class="form-group">
+
+                <label for="modalSizeOfRoll">
+                    🧵 Size of Roll
+                </label>
+
+                <input
+                    type="text"
+                    name="size_of_roll"
+                    id="modalSizeOfRoll"
+                    placeholder="Roll size"
+                    required
+                >
+
+            </div>
+
+            <!-- INK -->
+            <div class="form-group">
+
+                <label for="modalInk">
+                    🎨 Ink Type
+                </label>
+
+                <input
+                    type="text"
+                    name="ink"
+                    id="modalInk"
+                    placeholder="Enter ink type"
+                    required
+                >
+
+            </div>
+
+            <!-- START TIME -->
+            <div class="form-group">
+
+                <label for="modalStartTime">
+                    ⏰ Start Time
+                </label>
+
+                <input
+                    type="time"
+                    name="start_time"
+                    id="modalStartTime"
+                    required
+                >
+
+            </div>
+
+            <!-- END TIME -->
+            <div class="form-group">
+
+                <label for="modalEndTime">
+                    ⏱️ End Time
+                </label>
+
+                <input
+                    type="time"
+                    name="end_time"
+                    id="modalEndTime"
+                    required
+                >
+
+            </div>
+
+            <!-- STATE -->
+            <div class="form-group">
+
+                <label for="modalNewState">
+                    🚦 Production State
+                </label>
+
+                <select
+                    name="new_state"
+                    id="modalNewState"
+                    required
+                >
+
+                    <option value="">
+                        -- Select State --
+                    </option>
+
+                    <option value="Pre-Press">
+                        Pre-Press
+                    </option>
+
+                    <option value="Fusing">
+                        Fusing
+                    </option>
+
+                    <option value="Printing">
+                        Printing
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- REMARKS -->
+            <div class="form-group full-width">
+
+                <label for="modalRemarks">
+                    📝 Remarks
+                </label>
+
+                <textarea
+                    name="remarks"
+                    id="modalRemarks"
+                    rows="4"
+                    placeholder="Additional notes or remarks..."
+                ></textarea>
+
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="form-actions full-width">
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    💾 Save Changes
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="closeEditModal()"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+        <script>
+        function openEditModal(row) {
+            if (row.classList.contains('completed-job')) return;
+            document.getElementById('editModal').style.display = 'block';
+            document.getElementById('modalJobNo').value = row.getAttribute('data-job-no');
+            document.getElementById('modalNewState').value = '';
+            document.getElementById('modalRemarks').value = '';
+        }
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        // Close modal on outside click
+        window.onclick = function(event) {
+            var modal = document.getElementById('editModal');
+            if (event.target == modal) {
+                closeEditModal();
+            }
+        }
+        </script>
+                        <!-- Double-click on completed job row to show history  -->
+                        <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.querySelectorAll('.job-row.completed-job').forEach(function(row) {
+                                row.addEventListener('dblclick', function() {
+                                    const jobId = row.getAttribute('data-job-id');
+                                    fetch(`/job/${jobId}/history`)
+                                        .then(resp => resp.json())
+                                        .then(data => {
+                                            alert('Job History:\n' + (data.history || 'No history.'));
+                                        });
+                                });
+                            });
+                        });
+                        </script>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

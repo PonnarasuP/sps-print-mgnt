@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backup and Restore</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-header">Backup & Restore</h1>
+        <nav class="main-nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/designer">Create Job</a>
+            <a href="/production">Production</a>
+            <a href="/delivery">Delivery</a>
+            <a href="/approvals">Approvals</a>
+            <a href="/audit-logs">Audit Logs</a>
+            <a href="/reports">Reports</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/backup-restore" class="active">Backup/Restore</a>
+            <a href="/logout">Logout</a>
+        </nav>
+
+        <div class="card">
+            <h2 class="main-header section-sub-header">Download Backup</h2>
+            <p class="dashboard-auth-note">Download a full SQLite backup of current ERP data.</p>
+            <a href="/backup-download" class="btn">Download Backup</a>
+        </div>
+
+        <div class="card">
+            <h2 class="main-header section-sub-header">Restore from Backup</h2>
+            <p class="dashboard-auth-note">Upload a valid backup `.db` file. A safety copy of current database is automatically created before restore.</p>
+            <form method="post" action="/backup-restore" enctype="multipart/form-data" class="styled-form dashboard-auth-form">
+                <div class="form-group">
+                    <label for="restore_file">Backup File</label>
+                    <input type="file" id="restore_file" name="restore_file" required accept=".db,.sqlite,.sqlite3">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger">Restore Database</button>
+                </div>
+            </form>
+        </div>
+
+        {% if message %}
+        <div class="success-message">✅ {{ message }}</div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error-message">❌ {{ error }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

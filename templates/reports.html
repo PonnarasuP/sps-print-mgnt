@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-header">Reports & Analytics</h1>
+        <nav class="main-nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/designer">Create Job</a>
+            <a href="/production">Production</a>
+            <a href="/delivery">Delivery</a>
+            <a href="/approvals">Approvals</a>
+            <a href="/audit-logs">Audit Logs</a>
+            <a href="/reports" class="active">Reports</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/backup-restore">Backup/Restore</a>
+            <a href="/logout">Logout</a>
+        </nav>
+
+        <div class="stats-row">
+            <div class="stat-card stat-card-flex">
+                <div class="stat-card-icon">📋</div>
+                <div class="stat-card-label">Total Jobs</div>
+                <div class="stat-card-value">{{ total_jobs }}</div>
+            </div>
+            <div class="stat-card stat-card-flex">
+                <div class="stat-card-icon">✅</div>
+                <div class="stat-card-label">Completed</div>
+                <div class="stat-card-value">{{ completed_jobs }}</div>
+            </div>
+            <div class="stat-card stat-card-flex">
+                <div class="stat-card-icon">🚚</div>
+                <div class="stat-card-label">Delivered</div>
+                <div class="stat-card-value">{{ delivered_jobs }}</div>
+            </div>
+            <div class="stat-card stat-card-flex">
+                <div class="stat-card-icon">🏭</div>
+                <div class="stat-card-label">Active</div>
+                <div class="stat-card-value">{{ active_jobs }}</div>
+            </div>
+        </div>
+
+        <h2 class="main-header section-sub-header">Daily Throughput (Last 7 Days)</h2>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Jobs Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in daily_counts %}
+                    <tr>
+                        <td>{{ row.date }}</td>
+                        <td>{{ row.count }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2" class="empty-state">No data available.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="main-header section-sub-header section-sub-header-spaced">Top Customers</h2>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Jobs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for customer, count in top_customers %}
+                    <tr>
+                        <td>{{ customer }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2" class="empty-state">No customer data available.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

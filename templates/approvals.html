@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approvals</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-header">Approval Queue</h1>
+        <nav class="main-nav">
+        <nav class="main-nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/designer">Create Job</a>
+            <a href="/production" >Production</a>
+            <a href="/delivery">Delivery</a>
+            <a href="/approvals" class="active">Approvals</a>
+            <a href="/audit-logs">Audit Logs</a>
+            <a href="/reports">Reports</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/backup-restore">Backup/Restore</a>
+            <a href="/logout">Logout</a>
+        </nav>
+
+        <h2 class="main-header section-sub-header">Pending Requests</h2>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Action</th>
+                        <th>Job</th>
+                        <th>Requested By</th>
+                        <th>Role</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for req in pending_requests %}
+                    <tr>
+                        <td>{{ req.id }}</td>
+                        <td>{{ req.action }}</td>
+                        <td>{{ req.job.job_no if req.job else '-' }}</td>
+                        <td>{{ req.requested_by or '-' }}</td>
+                        <td>{{ req.requested_role or '-' }}</td>
+                        <td>{{ req.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td class="action-buttons">
+                            <form method="post" action="/approvals">
+                                <input type="hidden" name="request_id" value="{{ req.id }}">
+                                <button type="submit" name="decision" value="approve" class="btn btn-small">Approve</button>
+                                <button type="submit" name="decision" value="reject" class="btn btn-small btn-danger">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="empty-state">No pending approvals.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="main-header section-sub-header section-sub-header-spaced">Reviewed Requests</h2>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Action</th>
+                        <th>Status</th>
+                        <th>Requested By</th>
+                        <th>Reviewed By</th>
+                        <th>Reviewed At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for req in reviewed_requests %}
+                    <tr>
+                        <td>{{ req.id }}</td>
+                        <td>{{ req.action }}</td>
+                        <td>{{ req.status }}</td>
+                        <td>{{ req.requested_by or '-' }}</td>
+                        <td>{{ req.reviewed_by or '-' }}</td>
+                        <td>{{ req.reviewed_at.strftime('%Y-%m-%d %H:%M') if req.reviewed_at else '-' }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="empty-state">No reviewed requests.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

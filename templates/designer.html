@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create New Job | ERP PRO</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <div class="container">
+
+        <!-- ================= TOP HEADER ================= -->
+        <div class="topbar">
+
+            <div class="topbar-left">
+
+                <div class="logo-box">
+                    ✨
+                </div>
+
+                <div>
+
+                    <h1 class="main-header">
+                        Create New Job Card
+                    </h1>
+
+                    <p class="page-subtitle">
+                        Add a new production job into the ERP workflow system
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="status-badge">
+                    <!-- ERP PRO -->
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= NAVIGATION ================= -->
+         <nav class="main-nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/designer" class="active">Create Job</a>
+            <a href="/production" >Production</a>
+            <a href="/delivery">Delivery</a>
+           <!-- <a href="/approvals">Approvals</a>
+            <a href="/audit-logs">Audit Logs</a>
+            <a href="/reports">Reports</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/backup-restore">Backup/Restore</a> -->
+            <a href="/logout">Logout</a>
+        </nav>
+
+        <!-- ================= DASHBOARD GRID ================= -->
+        <div class="dashboard-grid">
+
+            <!-- ================= MAIN FORM ================= -->
+            <div class="card card-large">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2 class="card-title">
+                            Production Job Details
+                        </h2>
+
+                        <p class="card-subtitle">
+                            Enter the required information carefully before creating the job card
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- ================= FORM ================= -->
+                <form
+                    method="post"
+                    action="/designer"
+                    class="styled-form"
+                >
+
+                    <!-- CUSTOMER -->
+                    <div class="form-group">
+
+                        <label for="customer">
+                            Customer Name
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                👤
+                            </span>
+
+                            <input
+                                type="text"
+                                id="customer"
+                                name="customer"
+                                required
+                                placeholder="Enter customer name"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- DESIGN -->
+                    <div class="form-group">
+
+                        <label for="design">
+                            Design Name
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🎨
+                            </span>
+
+                            <input
+                                type="text"
+                                id="design"
+                                name="design"
+                                required
+                                placeholder="Enter design name"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- JOB NUMBER -->
+                    <div class="form-group">
+
+                        <label for="job_no">
+                            Job Number
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔖
+                            </span>
+
+                            <input
+                                type="text"
+                                id="job_no"
+                                name="job_no"
+                                required
+                                placeholder="JOB-1001"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- DATE -->
+                    <div class="form-group">
+
+                        <label for="date">
+                            Production Date
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                📅
+                            </span>
+
+                            <input
+                                type="date"
+                                id="date"
+                                name="date"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- SIZES -->
+                    <div class="form-group">
+
+                        <label for="sizes">
+                            Product Sizes
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                📏
+                            </span>
+
+                            <input
+                                type="text"
+                                id="sizes"
+                                name="sizes"
+                                placeholder="S, M, L, XL"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                        <small class="helper-text">
+                            Optional field
+                        </small>
+
+                    </div>
+
+                    <!-- ROLL FORM -->
+                    <div class="form-group">
+
+                        <label for="roll_form">
+                            Roll Form
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🧵
+                            </span>
+
+                            <input
+                                type="text"
+                                id="roll_form"
+                                name="roll_form"
+                                placeholder="Enter roll form details"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                        <small class="helper-text">
+                            Optional field
+                        </small>
+
+                    </div>
+
+                    <!-- ================= ACTIONS ================= -->
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="btn"
+                        >
+                            ➕ Create Job Card
+                        </button>
+
+                        <a
+                            href="/designer"
+                            class="btn btn-secondary"
+                        >
+                            Clear Form
+                        </a>
+
+                    </div>
+
+                </form>
+
+                <!-- ================= SUCCESS ================= -->
+                {% if message %}
+
+                <div class="success-message">
+
+                    ✅ {{ message }}
+
+                </div>
+
+                {% endif %}
+
+                <!-- ================= ERROR ================= -->
+                {% if error %}
+
+                <div class="error-message">
+
+                    ❌ {{ error }}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- ================= SIDE PANEL ================= -->
+            <div class="card side-card">
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+                        Quick Tips
+                    </h3>
+
+                </div>
+
+                <div class="info-box">
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Required Fields
+                        </span>
+
+                        <span class="info-value">
+                            4 Mandatory
+                        </span>
+
+                    </div>
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Workflow
+                        </span>
+
+                        <span class="info-value">
+                            Designer → Production → Delivery
+                        </span>
+
+                    </div>
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            System Status
+                        </span>
+
+                        <span class="status-pill success">
+                            Active
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

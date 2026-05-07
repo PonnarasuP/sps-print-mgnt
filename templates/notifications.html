@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-header">Notifications</h1>
+        <nav class="main-nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/designer">Create Job</a>
+            <a href="/production">Production</a>
+            <a href="/delivery">Delivery</a>
+            <a href="/approvals">Approvals</a>
+            <a href="/audit-logs">Audit Logs</a>
+            <a href="/reports">Reports</a>
+            <a href="/notifications" class="active">Notifications</a>
+            <a href="/backup-restore">Backup/Restore</a>
+            <a href="/logout">Logout</a>
+        </nav>
+        <div class="stats-row">
+            <div class="stat-card stat-card-flex">
+                <div class="stat-card-icon">⏳</div>
+                <div class="stat-card-label">Stuck Jobs (&gt;= {{ stuck_days }} days)</div>
+                <div class="stat-card-value">{{ stuck_jobs|length }}</div>
+            </div>
+            <div class="stat-card stat-card-flex">
+                <div class="stat-card-icon">📦</div>
+                <div class="stat-card-label">Pending Deliveries</div>
+                <div class="stat-card-value">{{ pending_deliveries|length }}</div>
+            </div>
+            <div class="stat-card stat-card-flex">
+                <div class="stat-card-icon">🔐</div>
+                <div class="stat-card-label">Failed Dashboard Password Attempts (24h)</div>
+                <div class="stat-card-value">{{ failed_dashboard_attempts|length }}</div>
+            </div>
+        </div>
+
+        <h2 class="main-header section-sub-header">Stuck Jobs</h2>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Job No</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in stuck_jobs %}
+                    <tr>
+                        <td>{{ job.job_no }}</td>
+                        <td>{{ job.customer }}</td>
+                        <td>{{ job.date.strftime('%Y-%m-%d') if job.date else '-' }}</td>
+                        <td>{{ job.status }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="empty-state">No stuck jobs.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="main-header section-sub-header section-sub-header-spaced">Pending Deliveries</h2>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Job No</th>
+                        <th>Customer</th>
+                        <th>Completed Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in pending_deliveries %}
+                    <tr>
+                        <td>{{ job.job_no }}</td>
+                        <td>{{ job.customer }}</td>
+                        <td>{{ job.date.strftime('%Y-%m-%d') if job.date else '-' }}</td>
+                        <td><a class="btn btn-small" href="/delivery">Go Delivery</a></td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="empty-state">No pending deliveries.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="main-header section-sub-header section-sub-header-spaced">Failed Dashboard Password Attempts (24h)</h2>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in failed_dashboard_attempts %}
+                    <tr>
+                        <td>{{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ log.username or '-' }}</td>
+                        <td>{{ log.role or '-' }}</td>
+                        <td>{{ log.details or '-' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="empty-state">No failed attempts recorded in last 24 hours.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

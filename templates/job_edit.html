@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Edit Job | ERP PRO</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <div class="container">
+
+        <!-- ================= TOP BAR ================= -->
+        <div class="topbar">
+
+            <div class="topbar-left">
+
+                <div class="logo-box">
+                    ✨
+                </div>
+
+                <div>
+
+                    <h1 class="main-header">
+                        Edit Production Job
+                    </h1>
+
+                    <p class="page-subtitle">
+                        Update and manage job production details
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="status-badge">
+                    ERP PRO
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= NAVIGATION ================= -->
+        <nav class="main-nav">
+
+            <a href="/dashboard">
+                <span>📊</span>
+                Dashboard
+            </a>
+
+            <a href="/designer">
+                <span>➕</span>
+                Create Job
+            </a>
+
+            <a href="/production">
+                <span>🏭</span>
+                Production
+            </a>
+
+            <a href="/delivery">
+                <span>🚚</span>
+                Delivery
+            </a>
+
+            <a href="/logout">
+                <span>🔓</span>
+                Logout
+            </a>
+
+        </nav>
+
+        <!-- ================= PAGE GRID ================= -->
+        <div class="dashboard-grid">
+
+            <!-- ================= MAIN FORM CARD ================= -->
+            <div class="card card-large">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2 class="card-title">
+                            Job Information
+                        </h2>
+
+                        <p class="card-subtitle">
+                            Modify job details and production status
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {% if job %}
+
+                <!-- ================= FORM ================= -->
+                <form
+                    method="post"
+                    action="/job/{{ job.id }}/edit"
+                    class="styled-form"
+                >
+
+                    <!-- CUSTOMER -->
+                    <div class="form-group">
+
+                        <label for="customer">
+                            Customer Name
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                👤
+                            </span>
+
+                            <input
+                                type="text"
+                                id="customer"
+                                name="customer"
+                                value="{{ job.customer }}"
+                                placeholder="Enter customer name"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- DESIGN -->
+                    <div class="form-group">
+
+                        <label for="design">
+                            Design Name
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🎨
+                            </span>
+
+                            <input
+                                type="text"
+                                id="design"
+                                name="design"
+                                value="{{ job.design }}"
+                                placeholder="Enter design name"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- JOB NUMBER -->
+                    <div class="form-group">
+
+                        <label for="job_no">
+                            Job Number
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔖
+                            </span>
+
+                            <input
+                                type="text"
+                                id="job_no"
+                                name="job_no"
+                                value="{{ job.job_no }}"
+                                placeholder="JOB-1001"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- DATE -->
+                    <div class="form-group">
+
+                        <label for="date">
+                            Production Date
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                📅
+                            </span>
+
+                            <input
+                                type="date"
+                                id="date"
+                                name="date"
+                                value="{{ job.date.strftime('%Y-%m-%d') }}"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- SIZES -->
+                    <div class="form-group">
+
+                        <label for="sizes">
+                            Sizes
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                📏
+                            </span>
+
+                            <input
+                                type="text"
+                                id="sizes"
+                                name="sizes"
+                                value="{{ job.sizes }}"
+                                placeholder="S, M, L, XL"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- ROLL FORM -->
+                    <div class="form-group">
+
+                        <label for="roll_form">
+                            Roll Form
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                📦
+                            </span>
+
+                            <input
+                                type="text"
+                                id="roll_form"
+                                name="roll_form"
+                                value="{{ job.roll_form }}"
+                                placeholder="Enter roll details"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="form-group">
+
+                        <label for="status">
+                            Production Status
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🚦
+                            </span>
+
+                            <select
+                                id="status"
+                                name="status"
+                            >
+
+                                <option
+                                    value="Pending"
+                                    {% if job.status == 'Pending' %}selected{% endif %}
+                                >
+                                    Pending
+                                </option>
+
+                                <option
+                                    value="In Production"
+                                    {% if job.status == 'In Production' %}selected{% endif %}
+                                >
+                                    In Production
+                                </option>
+
+                                <option
+                                    value="Completed"
+                                    {% if job.status == 'Completed' %}selected{% endif %}
+                                >
+                                    Completed
+                                </option>
+
+                                <option
+                                    value="Delivered"
+                                    {% if job.status == 'Delivered' %}selected{% endif %}
+                                >
+                                    Delivered
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ================= ACTIONS ================= -->
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="btn"
+                        >
+                            💾 Save Changes
+                        </button>
+
+                        <a
+                            href="/dashboard"
+                            class="btn btn-secondary"
+                        >
+                            ← Back to Dashboard
+                        </a>
+
+                    </div>
+
+                </form>
+
+                {% else %}
+
+                <!-- ================= ERROR ================= -->
+                <div class="error-message">
+
+                    ❌ Job not found.
+
+                </div>
+
+                {% endif %}
+
+                <!-- ================= BACKEND ERROR ================= -->
+                {% if error %}
+
+                <div class="error-message">
+
+                    ❌ {{ error }}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- ================= SIDE INFO PANEL ================= -->
+            <div class="card side-card">
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+                        Quick Information
+                    </h3>
+
+                </div>
+
+                <div class="info-box">
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Job ID
+                        </span>
+
+                        <span class="info-value">
+                            #{{ job.id }}
+                        </span>
+
+                    </div>
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Current Status
+                        </span>
+
+                        <span class="status-pill">
+                            {{ job.status }}
+                        </span>
+
+                    </div>
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Last Updated
+                        </span>
+
+                        <span class="info-value">
+                            Today
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

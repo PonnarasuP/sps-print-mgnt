@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Logs</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-header">Audit Logs</h1>
+        <nav class="main-nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/designer">Create Job</a>
+            <a href="/production">Production</a>
+            <a href="/delivery">Delivery</a>
+            <a href="/approvals">Approvals</a>
+            <a href="/audit-logs" class="active">Audit Logs</a>
+            <a href="/reports">Reports</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/backup-restore">Backup/Restore</a>
+            <a href="/logout">Logout</a>
+        </nav>
+
+        <form method="get" action="/audit-logs" class="styled-form search-form">
+            <input type="text" name="action" placeholder="Filter by action" value="{{ request.args.get('action', '') }}">
+            <input type="text" name="username" placeholder="Filter by username" value="{{ request.args.get('username', '') }}">
+            <input type="text" name="entity_id" placeholder="Filter by entity id" value="{{ request.args.get('entity_id', '') }}">
+            <button type="submit" class="btn">Apply</button>
+            <a href="/audit-logs" class="btn btn-secondary">Clear</a>
+        </form>
+
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Action</th>
+                        <th>Entity</th>
+                        <th>Entity ID</th>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td>{{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ log.action }}</td>
+                        <td>{{ log.entity_type }}</td>
+                        <td>{{ log.entity_id or '-' }}</td>
+                        <td>{{ log.username or '-' }}</td>
+                        <td>{{ log.role or '-' }}</td>
+                        <td>{{ log.details or '-' }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="empty-state">No logs found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

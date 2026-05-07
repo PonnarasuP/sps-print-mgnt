@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard For Owner</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container dashboard-auth-container">
+        <h1 class="main-header">Dashboard View</h1>
+        <p class="dashboard-auth-note">
+            Extra security is enabled for the dashboard. Enter the dashboard password to continue.
+        </p>
+
+        <form method="post" action="/dashboard-auth" class="styled-form dashboard-auth-form">
+            <div class="form-group">
+                <label for="password">Dashboard Password</label>
+                <input id="password" type="password" name="password" required autofocus>
+            </div>
+            <div class="form-actions">
+                <button class="btn" type="submit">Unlock Dashboard</button>
+                <a href="/production" class="btn btn-secondary">Back to Production</a>
+            </div>
+        </form>
+
+        {% if error %}
+        <div class="error-message">❌ {{ error }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

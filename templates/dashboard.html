@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPS PRINT TECH</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+    <div class="container">
+        <h1 class="main-header">Sublimation Job Dashboard</h1>
+        <nav class="main-nav">
+            <a href="/dashboard?access_token={{ request.args.get('access_token', '') }}" class="active">Dashboard</a>
+            <a href="/designer">Create Job</a>
+            <a href="/production">Production</a>
+            <a href="/delivery">Delivery</a>
+            <a href="/approvals">Approvals</a>
+            <a href="/audit-logs">Audit Logs</a>
+            <a href="/reports">Reports</a>
+            <a href="/notifications">Notifications</a>
+            <a href="/backup-restore">Backup/Restore</a>
+            <a href="/logout">Logout</a>
+        </nav>
+        <form method="get" action="/dashboard" class="styled-form search-form">
+            <input type="hidden" name="access_token" value="{{ request.args.get('access_token', '') }}">
+            <input type="text" name="search" placeholder="🔍 Search by customer, job no, design..." value="{{ request.args.get('search', '') }}">
+            <select name="status" title="Filter by status">
+                {% set selected_status = request.args.get('status', '') %}
+                <option value="">All Status</option>
+                <option value="Pre-Press" {{ 'selected' if selected_status == 'Pre-Press' else '' }}>Pre-Press</option>
+                <option value="Fusing" {{ 'selected' if selected_status == 'Fusing' else '' }}>Fusing</option>
+                <option value="Printing" {{ 'selected' if selected_status == 'Printing' else '' }}>Printing</option>
+                <option value="Completed" {{ 'selected' if selected_status == 'Completed' else '' }}>Completed</option>
+                <option value="Delivered" {{ 'selected' if selected_status == 'Delivered' else '' }}>Delivered</option>
+            </select>
+            <input type="date" name="from_date" value="{{ request.args.get('from_date', '') }}" title="From date">
+            <input type="date" name="to_date" value="{{ request.args.get('to_date', '') }}" title="To date">
+            <button type="submit" class="btn">Search</button>
+            <button type="submit" name="export" value="csv" class="btn">Export CSV</button>
+            <a href="/dashboard?access_token={{ request.args.get('access_token', '') }}" class="btn btn-secondary">Clear</a>
+        </form>
+        <div class="stats-row">
+            <div class="stat-card stat-card-flex">
+                <div class="stat-card-icon">📋</div>
+                <div class="stat-card-label">Total Jobs</div>
+                <div class="stat-card-value">{{ jobs|length }}</div>
+            </div>
+            <div class="stat-card stat-card-flex">
+                <div class="stat-card-icon">⚙️</div>
+                <div class="stat-card-label">In Production</div>
+                <div class="stat-card-value">{{ jobs | selectattr('status', 'equalto', 'Production') | list | length }}</div>
+            </div>
+            <div class="stat-card stat-card-flex">
+                <div class="stat-card-icon">✅</div>
+                <div class="stat-card-label">Completed</div>
+                <div class="stat-card-value">{{ jobs | selectattr('status', 'equalto', 'Completed') | list | length }}</div>
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Design</th>
+                        <th>Job No</th>
+                        <th>Date</th>
+                        <th>Sizes</th>
+                        <th>Roll</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for job in jobs %}
+                    <tr class="{{ 'completed-job' if job.status == 'Completed' else '' }}">
+                        <td>{{ job.id }}</td>
+                        <td>{{ job.customer }}</td>
+                        <td>{{ job.design }}</td>
+                        <td><strong>{{ job.job_no }}</strong></td>
+                        <td>{{ job.date.strftime('%d-%b-%Y') }}</td>
+                        <td>{{ job.sizes }}</td>
+                        <td>{{ job.roll_form }}</td>
+
+                        <!-- Status Badge -->
+                        <td>
+                            <span class="status-badge status-{{ job.status | lower }}">
+                                {{ job.status }}
+                            </span>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="action-buttons">
+                            <a href="/job/{{ job.id }}" class="btn btn-small">View</a>
+                            {% if job.status != 'Delivered' %}
+                                <a href="/job/{{ job.id }}/edit" class="btn btn-small btn-secondary">Edit</a>
+
+                                <form method="post" action="/job/{{ job.id }}/delete" class="inline-form">
+                                    <input type="hidden" name="access_token" value="{{ request.args.get('access_token', '') }}">
+                                    <button 
+                                        type="submit" 
+                                        class="btn btn-small btn-danger"
+                                        onclick="return confirm('Delete this job?');">
+                                        Delete
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                {% else %}
+                    <tr>
+                        <td colspan="9" class="empty-state">
+                            <div class="empty-state-icon">🚫</div>
+                            <div>No jobs found. Create your first job!</div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="footer-actions">
+            <a href="/" class="btn btn-secondary">⬅ Back to Home</a>
+        </div>
+
+    </div>
+</body>
+</html>
